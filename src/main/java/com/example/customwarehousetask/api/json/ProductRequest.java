@@ -10,8 +10,12 @@ import java.math.BigDecimal;
 public class ProductRequest {
     @NotNull
     private Integer article;
+    @NotNull
     private String name;
+    @NotNull
     private BigDecimal lastPurchase;
+    @NotNull
     private BigDecimal lastSale;
+    @NotNull
     private Warehouse warehouse;
 }

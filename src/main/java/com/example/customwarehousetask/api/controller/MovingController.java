@@ -8,6 +8,7 @@ import com.example.customwarehousetask.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class MovingController {
     private final ProductService productService;
 
     @PostMapping("/moving")
-    public @ResponseBody ResponseEntity<String> moving(@RequestBody Moving moving) {
+    public @ResponseBody ResponseEntity<String> moving(@Validated @RequestBody Moving moving) {
         Warehouse warehouse = warehouseService.getByName(moving.getWarehouse2());
         if (warehouse == null) {
             return status(HttpStatus.valueOf("Not found warehouse " + moving.getWarehouse2())).build();

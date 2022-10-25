@@ -1,6 +1,7 @@
 package com.example.customwarehousetask.documents;
 
 import com.example.customwarehousetask.entity.Product;
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +13,11 @@ import java.util.stream.Collectors;
 @Setter
 @AllArgsConstructor
 public class Admission {
+    @NotNull
     private Long number;
+    @NotNull
     private String warehouseName;
+    @NotNull
     private List<Product> productList;
 
     @Override
