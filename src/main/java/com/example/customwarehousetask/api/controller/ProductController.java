@@ -8,6 +8,7 @@ import com.example.customwarehousetask.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ProductController {
     }
 
     @PostMapping("/create/product")
-    public @ResponseBody ResponseEntity<ProductResponse> create(@RequestBody ProductRequest request) {
+    public @ResponseBody ResponseEntity<ProductResponse> create(@Validated @RequestBody ProductRequest request) {
         Product product = service.create(
                 request.getArticle(),
                 request.getName(),
@@ -45,7 +46,7 @@ public class ProductController {
     }
 
     @PatchMapping("/edit/product")
-    public @ResponseBody ResponseEntity<ProductResponse> edit(@RequestBody ProductRequest request) {
+    public @ResponseBody ResponseEntity<ProductResponse> edit(@Validated @RequestBody ProductRequest request) {
         Product product = service.edit(
                 request.getArticle(),
                 request.getName(),
@@ -60,7 +61,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/product")
-    private @ResponseBody ResponseEntity<String> delete(@RequestBody ProductRequest request) {
+    private @ResponseBody ResponseEntity<String> delete(@Validated @RequestBody ProductRequest request) {
         service.delete(request.getArticle());
         return ok(request.getArticle() + " deleted");
     }
