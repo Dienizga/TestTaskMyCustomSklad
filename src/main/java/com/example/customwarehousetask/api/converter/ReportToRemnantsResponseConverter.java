@@ -1,7 +1,7 @@
 package com.example.customwarehousetask.api.converter;
 
 import com.example.customwarehousetask.api.json.ReportRemnantsResponse;
-import com.example.customwarehousetask.service.objects.ProductDTO;
+import com.example.customwarehousetask.service.DTO.ProductDTO;
 import org.springframework.stereotype.Component;
 
 @Component

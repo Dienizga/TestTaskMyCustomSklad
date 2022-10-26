@@ -3,9 +3,8 @@ package com.example.customwarehousetask.service;
 import com.example.customwarehousetask.entity.Warehouse;
 import com.example.customwarehousetask.repository.WarehouseRepository;
 import com.example.customwarehousetask.service.converter.WarehouseToDTOConverter;
-import com.example.customwarehousetask.service.objects.WarehouseDTO;
+import com.example.customwarehousetask.service.DTO.WarehouseDTO;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

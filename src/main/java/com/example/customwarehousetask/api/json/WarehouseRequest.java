@@ -7,6 +7,5 @@ import lombok.Data;
 public class WarehouseRequest {
     @NotNull
     private String name;
-    @NotNull
     private String newName;
 }

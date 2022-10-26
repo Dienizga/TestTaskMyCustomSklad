@@ -1,10 +1,8 @@
 package com.example.customwarehousetask.service;
 
-import com.example.customwarehousetask.entity.Product;
-import com.example.customwarehousetask.entity.Warehouse;
 import com.example.customwarehousetask.service.converter.DTOToWarehouseConverter;
-import com.example.customwarehousetask.service.objects.ProductDTO;
-import com.example.customwarehousetask.service.objects.WarehouseDTO;
+import com.example.customwarehousetask.service.DTO.ProductDTO;
+import com.example.customwarehousetask.service.DTO.WarehouseDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

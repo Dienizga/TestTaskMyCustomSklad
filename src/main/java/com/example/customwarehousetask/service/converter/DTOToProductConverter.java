@@ -3,7 +3,7 @@ package com.example.customwarehousetask.service.converter;
 import com.example.customwarehousetask.api.converter.Converter;
 import com.example.customwarehousetask.entity.Product;
 import com.example.customwarehousetask.entity.Warehouse;
-import com.example.customwarehousetask.service.objects.ProductDTO;
+import com.example.customwarehousetask.service.DTO.ProductDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

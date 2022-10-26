@@ -15,7 +15,7 @@ import static org.springframework.http.ResponseEntity.ok;
 public class SaleController {
     private final ProductService productService;
 
-    @PostMapping("/moving")
+    @PostMapping("/sale")
     public @ResponseBody ResponseEntity<String> sale(@Validated @RequestBody Sale sale) {
         sale.getProductList().forEach(p -> productService.delete(p.getArticle()));
         return ok(sale.getProductList() + " saled");

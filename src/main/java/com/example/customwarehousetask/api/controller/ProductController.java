@@ -4,7 +4,7 @@ import com.example.customwarehousetask.api.converter.ProductToResponseConverter;
 import com.example.customwarehousetask.api.json.ProductRequest;
 import com.example.customwarehousetask.api.json.ProductResponse;
 import com.example.customwarehousetask.service.ProductService;
-import com.example.customwarehousetask.service.objects.ProductDTO;
+import com.example.customwarehousetask.service.DTO.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

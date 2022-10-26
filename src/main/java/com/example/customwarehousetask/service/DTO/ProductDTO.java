@@ -1,4 +1,4 @@
-package com.example.customwarehousetask.service.objects;
+package com.example.customwarehousetask.service.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
