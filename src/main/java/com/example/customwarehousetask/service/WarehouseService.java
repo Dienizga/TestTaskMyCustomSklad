@@ -2,46 +2,60 @@ package com.example.customwarehousetask.service;
 
 import com.example.customwarehousetask.entity.Warehouse;
 import com.example.customwarehousetask.repository.WarehouseRepository;
-import lombok.RequiredArgsConstructor;
+import com.example.customwarehousetask.service.converter.WarehouseToDTOConverter;
+import com.example.customwarehousetask.service.objects.WarehouseDTO;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class WarehouseService {
     private final WarehouseRepository repository;
+    private final WarehouseToDTOConverter converter;
 
-    public List<Warehouse> getAll() {
-        return repository.findAll();
+    public List<WarehouseDTO> getAll() {
+        return repository.findAll().stream()
+                .map(converter::convert)
+                .collect(Collectors.toList());
     }
 
-    public Warehouse getByName(String name) {
-        return repository.findByName(name);
+    public WarehouseDTO getByName(String name) {
+        if (repository.findByName(name) == null) {
+            return converter.convert(add(name));
+        }
+        return converter.convert(repository.findByName(name));
     }
 
-    public Warehouse create(String name) {
-        if (repository.findAll().stream().anyMatch(w -> w.getName().equalsIgnoreCase(name))) {
+    public WarehouseDTO create(String name) {
+        if (repository.findByName(name) != null) {
             return null;
         }
-        Warehouse warehouse = new Warehouse();
-        warehouse.setName(name);
-        repository.save(warehouse);
-        return warehouse;
+        return converter.convert(add(name));
     }
 
-    public Warehouse edit(String lastName, String newName) {
+    public WarehouseDTO edit(String lastName, String newName) {
         Warehouse warehouse = repository.findByName(lastName);
         if (warehouse == null) {
             return null;
         }
         warehouse.setName(newName);
         repository.saveAndFlush(warehouse);
-        return warehouse;
+        return converter.convert(warehouse);
     }
 
     public void delete(String name) {
         Warehouse warehouse = repository.findByName(name);
         repository.delete(warehouse);
+    }
+
+    private Warehouse add(String name) {
+        Warehouse warehouse = new Warehouse();
+        warehouse.setName(name);
+        repository.save(warehouse);
+        return warehouse;
     }
 }

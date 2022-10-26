@@ -1,7 +1,6 @@
 package com.example.customwarehousetask.documents;
 
 import com.example.customwarehousetask.entity.Product;
-import com.example.customwarehousetask.entity.Warehouse;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -3,8 +3,8 @@ package com.example.customwarehousetask.api.controller;
 import com.example.customwarehousetask.api.converter.WarehouseToResponseConverter;
 import com.example.customwarehousetask.api.json.WarehouseRequest;
 import com.example.customwarehousetask.api.json.WarehouseResponse;
-import com.example.customwarehousetask.entity.Warehouse;
 import com.example.customwarehousetask.service.WarehouseService;
+import com.example.customwarehousetask.service.objects.WarehouseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +26,13 @@ public class WarehouseController {
 
     @GetMapping("/warehouses")
     public @ResponseBody ResponseEntity<List<WarehouseResponse>> getList() {
-        List<Warehouse> warehouseList = service.getAll();
+        List<WarehouseDTO> warehouseList = service.getAll();
         return ok(warehouseList.stream().map(converter::convert).collect(Collectors.toList()));
     }
 
     @PostMapping("/create/warehouse")
     public @ResponseBody ResponseEntity<WarehouseResponse> create(@Validated @RequestBody WarehouseRequest request) {
-        Warehouse warehouse = service.create(request.getName());
+        WarehouseDTO warehouse = service.create(request.getName());
         if (warehouse == null) {
             return status(HttpStatus.valueOf("There is already such a warehouse")).build();
         }
@@ -41,7 +41,7 @@ public class WarehouseController {
 
     @PatchMapping("/update/warehouse")
     public @ResponseBody ResponseEntity<WarehouseResponse> edit(@Validated @RequestBody WarehouseRequest request) {
-        Warehouse warehouse = service.edit(request.getName(), request.getNewName());
+        WarehouseDTO warehouse = service.edit(request.getName(), request.getNewName());
         if (warehouse == null) {
             return status(HttpStatus.valueOf("Not found")).build();
         }

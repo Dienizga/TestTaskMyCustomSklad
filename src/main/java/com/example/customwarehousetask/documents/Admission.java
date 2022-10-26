@@ -1,6 +1,6 @@
 package com.example.customwarehousetask.documents;
 
-import com.example.customwarehousetask.entity.Product;
+import com.example.customwarehousetask.service.objects.ProductDTO;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class Admission {
     @NotNull
     private String warehouseName;
     @NotNull
-    private List<Product> productList;
+    private List<ProductDTO> productList;
 
     @Override
     public String toString() {

@@ -1,6 +1,6 @@
 package com.example.customwarehousetask.api.json;
 
-import com.example.customwarehousetask.entity.Warehouse;
+import com.example.customwarehousetask.service.objects.WarehouseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,5 +9,5 @@ import lombok.Data;
 public class ReportRemnantsResponse {
     private Integer article;
     private String name;
-    private Warehouse warehouse;
+    private WarehouseDTO warehouseDTO;
 }
