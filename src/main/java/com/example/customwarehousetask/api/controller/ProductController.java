@@ -3,8 +3,8 @@ package com.example.customwarehousetask.api.controller;
 import com.example.customwarehousetask.api.converter.ProductToResponseConverter;
 import com.example.customwarehousetask.api.json.ProductRequest;
 import com.example.customwarehousetask.api.json.ProductResponse;
-import com.example.customwarehousetask.entity.Product;
 import com.example.customwarehousetask.service.ProductService;
+import com.example.customwarehousetask.service.objects.ProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,38 +26,38 @@ public class ProductController {
 
     @GetMapping("/products")
     public @ResponseBody ResponseEntity<List<ProductResponse>> getList() {
-        List<Product> products = service.getAll();
+        List<ProductDTO> products = service.getAll();
         return ok(products.stream().map(converter::convert).collect(Collectors.toList()));
     }
 
     @PostMapping("/create/product")
     public @ResponseBody ResponseEntity<ProductResponse> create(@Validated @RequestBody ProductRequest request) {
-        Product product = service.create(
+        ProductDTO productDTO = service.create(
                 request.getArticle(),
                 request.getName(),
                 request.getLastPurchase(),
                 request.getLastSale(),
                 request.getWarehouse()
         );
-        if (product == null) {
+        if (productDTO == null) {
             return status(HttpStatus.valueOf("such a product already exists")).build();
         }
-        return ok(converter.convert(product));
+        return ok(converter.convert(productDTO));
     }
 
     @PatchMapping("/edit/product")
     public @ResponseBody ResponseEntity<ProductResponse> edit(@Validated @RequestBody ProductRequest request) {
-        Product product = service.edit(
+        ProductDTO productDTO = service.edit(
                 request.getArticle(),
                 request.getName(),
                 request.getLastPurchase(),
                 request.getLastSale(),
                 request.getWarehouse()
         );
-        if (product == null) {
+        if (productDTO == null) {
             return status(HttpStatus.valueOf("Not found")).build();
         }
-        return ok(converter.convert(product));
+        return ok(converter.convert(productDTO));
     }
 
     @DeleteMapping("/delete/product")

@@ -17,8 +17,8 @@ public class Sale {
     @NotNull
     private Long number;
     @NotNull
-    private Warehouse warehouse;@
-    NotNull
+    private Warehouse warehouse;
+    @NotNull
     private List<Product> productList;
 
     @Override

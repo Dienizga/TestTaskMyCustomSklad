@@ -1,6 +1,5 @@
-package com.example.customwarehousetask.api.json;
+package com.example.customwarehousetask.service.objects;
 
-import com.example.customwarehousetask.service.objects.WarehouseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,11 +7,11 @@ import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-public class ProductResponse {
+public class ProductDTO {
     private Long id;
     private Integer article;
     private String name;
     private BigDecimal lastPurchase;
     private BigDecimal lastSale;
-    private WarehouseDTO warehouse;
+    private WarehouseDTO warehouseDTO;
 }

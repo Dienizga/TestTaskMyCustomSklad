@@ -1,32 +1,35 @@
 package com.example.customwarehousetask.service;
 
-import com.example.customwarehousetask.entity.Product;
-import com.example.customwarehousetask.entity.Warehouse;
-import com.example.customwarehousetask.repository.ProductRepository;
-import com.example.customwarehousetask.repository.WarehouseRepository;
+import com.example.customwarehousetask.service.converter.DTOToWarehouseConverter;
+import com.example.customwarehousetask.service.objects.ProductDTO;
+import com.example.customwarehousetask.service.objects.WarehouseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ReportService {
-    private final ProductRepository productRepository;
-    private final WarehouseRepository warehouseRepository;
+    private final ProductService productService;
+    private final WarehouseService warehouseService;
+    private final DTOToWarehouseConverter toWarehouseConverter;
 
-    public List<Product> getAllProductList(String name) {
+    @Transactional
+    public List<ProductDTO> getAllProductList(String name) {
         if (name == null) {
-            return productRepository.findAll();
+            return productService.getAll();
         }
-        return productRepository.findAllByName(name);
+        return productService.getAllByName(name);
     }
 
-    public List<Product> getRemnants(String warehouseName) {
+    @Transactional
+    public List<ProductDTO> getRemnants(String warehouseName) {
         if (warehouseName == null) {
-            return productRepository.findAll();
+            return productService.getAll();
         }
-        Warehouse warehouse = warehouseRepository.findByName(warehouseName);
-        return productRepository.findAllByWarehouse(warehouse);
+        WarehouseDTO warehouse = warehouseService.getByName(warehouseName);
+        return productService.getAllByWarehouse(toWarehouseConverter.convert(warehouse));
     }
 }
