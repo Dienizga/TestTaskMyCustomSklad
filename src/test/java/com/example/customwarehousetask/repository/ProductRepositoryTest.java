@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 class ProductRepositoryTest {
+
     @Autowired ProductRepository subj;
 
     @Test
