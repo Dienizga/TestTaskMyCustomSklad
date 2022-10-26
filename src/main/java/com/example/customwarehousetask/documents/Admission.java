@@ -1,6 +1,6 @@
 package com.example.customwarehousetask.documents;
 
-import com.example.customwarehousetask.service.objects.ProductDTO;
+import com.example.customwarehousetask.service.DTO.ProductDTO;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
