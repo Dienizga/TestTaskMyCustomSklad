@@ -1,6 +1,6 @@
 package com.example.customwarehousetask.api.json;
 
-import com.example.customwarehousetask.entity.Warehouse;
+import com.example.customwarehousetask.service.DTO.WarehouseDTO;
 import com.sun.istack.NotNull;
 import lombok.Data;
 
@@ -16,5 +16,5 @@ public class ProductRequest {
     private BigDecimal lastPurchase;
     private BigDecimal lastSale;
     @NotNull
-    private Warehouse warehouse;
+    private WarehouseDTO warehouseDTO;
 }

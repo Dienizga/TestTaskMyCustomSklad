@@ -1,11 +1,12 @@
 package com.example.customwarehousetask.service;
 
 import com.example.customwarehousetask.entity.Product;
-import com.example.customwarehousetask.entity.Warehouse;
 import com.example.customwarehousetask.exception.CustomUserException;
 import com.example.customwarehousetask.repository.ProductRepository;
-import com.example.customwarehousetask.service.converter.ProductToDTOConverter;
 import com.example.customwarehousetask.service.DTO.ProductDTO;
+import com.example.customwarehousetask.service.DTO.WarehouseDTO;
+import com.example.customwarehousetask.service.converter.DTOToWarehouseConverter;
+import com.example.customwarehousetask.service.converter.ProductToDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository repository;
     private final ProductToDTOConverter converter;
+    private final DTOToWarehouseConverter toWarehouseConverter;
 
     public List<ProductDTO> getAll() {
         return repository.findAll().stream()
@@ -25,7 +27,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductDTO create(Integer article, String name, BigDecimal lastPurchase, Warehouse warehouse) {
+    public ProductDTO create(Integer article, String name, BigDecimal lastPurchase, WarehouseDTO warehouseDTO) {
         if (repository.findByArticle(article) != null) {
             throw new CustomUserException("Such a product already exists!");
         }
@@ -33,13 +35,16 @@ public class ProductService {
         product.setArticle(article);
         product.setName(name);
         product.setLastPurchase(lastPurchase);
-        product.setWarehouse(warehouse);
+        product.setWarehouse(toWarehouseConverter.convert(warehouseDTO));
         repository.save(product);
         return converter.convert(product);
     }
 
-    public ProductDTO edit(Integer article, String name, BigDecimal lastPurchase, BigDecimal lastSale, Warehouse warehouse) {
+    public ProductDTO edit(Integer article, String name, BigDecimal lastPurchase, BigDecimal lastSale, WarehouseDTO warehouseDTO) {
         Product product = repository.findByArticle(article);
+        if (product == null) {
+            throw new CustomUserException("Not found!");
+        }
         if (name != null) {
             product.setName(name);
         }
@@ -49,16 +54,17 @@ public class ProductService {
         if (lastSale != null) {
             product.setLastSale(lastSale);
         }
-        if (warehouse != null) {
-            product.setWarehouse(warehouse);
+        if (warehouseDTO != null) {
+            product.setWarehouse(toWarehouseConverter.convert(warehouseDTO));
         }
         repository.saveAndFlush(product);
         return converter.convert(product);
     }
 
-    public ProductDTO move(Integer article, Warehouse warehouse) {
+    public ProductDTO move(Integer article, WarehouseDTO warehouseDTO) {
         Product product = repository.findByArticle(article);
-        product.setWarehouse(warehouse);
+
+        product.setWarehouse(toWarehouseConverter.convert(warehouseDTO));
         repository.saveAndFlush(product);
         return converter.convert(product);
     }
@@ -75,8 +81,8 @@ public class ProductService {
         return converter.convert(product);
     }
 
-    public List<ProductDTO> getAllByWarehouse(Warehouse warehouse) {
-        return repository.findAllByWarehouse(warehouse).stream()
+    public List<ProductDTO> getAllByWarehouse(WarehouseDTO warehouseDTO) {
+        return repository.findAllByWarehouse(toWarehouseConverter.convert(warehouseDTO)).stream()
                 .map(converter::convert)
                 .collect(Collectors.toList());
     }
