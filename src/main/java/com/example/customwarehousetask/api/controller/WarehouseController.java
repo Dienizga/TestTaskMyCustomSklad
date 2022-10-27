@@ -37,7 +37,6 @@ public class WarehouseController {
         WarehouseDTO warehouse;
         try {
             warehouse = service.create(request.getName());
-
         } catch (CustomUserException e) {
             return status(HttpStatus.valueOf(e.getMessage())).build();
         }

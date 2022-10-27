@@ -25,8 +25,8 @@ public class SaleController {
 
     @PostMapping("/sale")
     public @ResponseBody ResponseEntity<SaleResponse> sale(@Validated @RequestBody SaleRequest request) {
-        WarehouseDTO warehouseDTO = warehouseService.getById(request.getWarehouse().getId());
-        List<ProductDTO> productDTOList = request.getProductList().stream()
+        WarehouseDTO warehouseDTO = warehouseService.getById(request.getWarehouseDTO().getId());
+        List<ProductDTO> productDTOList = request.getProductDTOList().stream()
                 .map(p -> productService.writeOff(p.getArticle(), p.getLastSale()))
                 .collect(Collectors.toList());
         return ok(new SaleResponse(request.getNumber(), warehouseDTO, productDTOList));
