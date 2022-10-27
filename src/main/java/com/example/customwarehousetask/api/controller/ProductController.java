@@ -39,7 +39,7 @@ public class ProductController {
                     request.getArticle(),
                     request.getName(),
                     request.getLastPurchase(),
-                    request.getWarehouse()
+                    request.getWarehouseDTO()
             );
         } catch (CannotUndoException e) {
             return status(HttpStatus.valueOf(e.getMessage())).build();
@@ -49,22 +49,24 @@ public class ProductController {
 
     @PatchMapping("/edit/product")
     public @ResponseBody ResponseEntity<ProductResponse> edit(@Validated @RequestBody ProductRequest request) {
-        ProductDTO productDTO = service.edit(
-                request.getArticle(),
-                request.getName(),
-                request.getLastPurchase(),
-                request.getLastSale(),
-                request.getWarehouse()
-        );
-        if (productDTO == null) {
-            return status(HttpStatus.valueOf("Not found")).build();
+        ProductDTO productDTO;
+        try {
+            productDTO = service.edit(
+                    request.getArticle(),
+                    request.getName(),
+                    request.getLastPurchase(),
+                    request.getLastSale(),
+                    request.getWarehouseDTO()
+            );
+        } catch (CannotUndoException e) {
+            return status(HttpStatus.valueOf(e.getMessage())).build();
         }
         return ok(converter.convert(productDTO));
     }
 
     @DeleteMapping("/delete/product")
-    private @ResponseBody ResponseEntity<String> delete(@Validated @RequestBody ProductRequest request) {
+    private @ResponseBody ResponseEntity.BodyBuilder delete(@Validated @RequestBody ProductRequest request) {
         service.delete(request.getArticle());
-        return ok(request.getArticle() + " deleted");
+        return status(HttpStatus.ACCEPTED);
     }
 }

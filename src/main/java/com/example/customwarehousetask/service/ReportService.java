@@ -1,6 +1,5 @@
 package com.example.customwarehousetask.service;
 
-import com.example.customwarehousetask.service.converter.DTOToWarehouseConverter;
 import com.example.customwarehousetask.service.DTO.ProductDTO;
 import com.example.customwarehousetask.service.DTO.WarehouseDTO;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import java.util.List;
 public class ReportService {
     private final ProductService productService;
     private final WarehouseService warehouseService;
-    private final DTOToWarehouseConverter toWarehouseConverter;
 
     @Transactional
     public List<ProductDTO> getAllProductList(String name) {
@@ -30,6 +28,6 @@ public class ReportService {
             return productService.getAll();
         }
         WarehouseDTO warehouse = warehouseService.getByName(warehouseName);
-        return productService.getAllByWarehouse(toWarehouseConverter.convert(warehouse));
+        return productService.getAllByWarehouse(warehouse);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.customwarehousetask.service;
 
 import com.example.customwarehousetask.entity.Warehouse;
+import com.example.customwarehousetask.exception.CustomUserException;
 import com.example.customwarehousetask.repository.WarehouseRepository;
 import com.example.customwarehousetask.service.converter.WarehouseToDTOConverter;
 import com.example.customwarehousetask.service.DTO.WarehouseDTO;
@@ -32,14 +33,14 @@ public class WarehouseService {
     public WarehouseDTO getById(Long id) {
         Warehouse warehouse = repository.findById(id).orElse(null);
         if (warehouse == null) {
-            return null;
+            throw new CustomUserException("Not found!");
         }
         return converter.convert(warehouse);
     }
 
     public WarehouseDTO create(String name) {
         if (repository.findByName(name) != null) {
-            return null;
+            throw new CustomUserException("There is already such a warehouse");
         }
         return converter.convert(add(name));
     }
@@ -47,7 +48,7 @@ public class WarehouseService {
     public WarehouseDTO edit(String lastName, String newName) {
         Warehouse warehouse = repository.findByName(lastName);
         if (warehouse == null) {
-            return null;
+            throw new CustomUserException("Not found!");
         }
         warehouse.setName(newName);
         repository.saveAndFlush(warehouse);
