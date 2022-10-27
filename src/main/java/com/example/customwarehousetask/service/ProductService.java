@@ -2,6 +2,7 @@ package com.example.customwarehousetask.service;
 
 import com.example.customwarehousetask.entity.Product;
 import com.example.customwarehousetask.entity.Warehouse;
+import com.example.customwarehousetask.exception.CustomUserException;
 import com.example.customwarehousetask.repository.ProductRepository;
 import com.example.customwarehousetask.service.converter.ProductToDTOConverter;
 import com.example.customwarehousetask.service.DTO.ProductDTO;
@@ -24,15 +25,14 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductDTO create(Integer article, String name, BigDecimal lastPurchase, BigDecimal lastSale, Warehouse warehouse) {
+    public ProductDTO create(Integer article, String name, BigDecimal lastPurchase, Warehouse warehouse) {
         if (repository.findByArticle(article) != null) {
-            return null;
+            throw new CustomUserException("Such a product already exists!");
         }
         Product product = new Product();
         product.setArticle(article);
         product.setName(name);
         product.setLastPurchase(lastPurchase);
-        product.setLastSale(lastSale);
         product.setWarehouse(warehouse);
         repository.save(product);
         return converter.convert(product);
@@ -40,9 +40,6 @@ public class ProductService {
 
     public ProductDTO edit(Integer article, String name, BigDecimal lastPurchase, BigDecimal lastSale, Warehouse warehouse) {
         Product product = repository.findByArticle(article);
-        if (product == null) {
-            return null;
-        }
         if (name != null) {
             product.setName(name);
         }
@@ -59,9 +56,23 @@ public class ProductService {
         return converter.convert(product);
     }
 
+    public ProductDTO move(Integer article, Warehouse warehouse) {
+        Product product = repository.findByArticle(article);
+        product.setWarehouse(warehouse);
+        repository.saveAndFlush(product);
+        return converter.convert(product);
+    }
+
     public void delete(Integer article) {
         Product product = repository.findByArticle(article);
         repository.delete(product);
+    }
+
+    public ProductDTO writeOff(Integer article, BigDecimal lastSale) {
+        Product product = repository.findByArticle(article);
+        product.setLastSale(lastSale);
+        repository.saveAndFlush(product);
+        return converter.convert(product);
     }
 
     public List<ProductDTO> getAllByWarehouse(Warehouse warehouse) {

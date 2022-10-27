@@ -25,10 +25,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="last_purchase" type="numeric">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="last_sale" type="numeric">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="warehouse_id"  type="int">
                 <constraints nullable="false" foreignKeyName="product_warehouse_id" references="warehouse(id)"/>

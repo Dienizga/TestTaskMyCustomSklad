@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.undo.CannotUndoException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,15 +33,16 @@ public class ProductController {
 
     @PostMapping("/create/product")
     public @ResponseBody ResponseEntity<ProductResponse> create(@Validated @RequestBody ProductRequest request) {
-        ProductDTO productDTO = service.create(
-                request.getArticle(),
-                request.getName(),
-                request.getLastPurchase(),
-                request.getLastSale(),
-                request.getWarehouse()
-        );
-        if (productDTO == null) {
-            return status(HttpStatus.valueOf("such a product already exists")).build();
+        ProductDTO productDTO;
+        try {
+            productDTO = service.create(
+                    request.getArticle(),
+                    request.getName(),
+                    request.getLastPurchase(),
+                    request.getWarehouse()
+            );
+        } catch (CannotUndoException e) {
+            return status(HttpStatus.valueOf(e.getMessage())).build();
         }
         return ok(converter.convert(productDTO));
     }
