@@ -1,20 +1,18 @@
 package com.example.customwarehousetask.api.json;
 
+import com.example.customwarehousetask.entity.Product;
 import com.example.customwarehousetask.entity.Warehouse;
 import com.sun.istack.NotNull;
 import lombok.Data;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
-public class ProductRequest {
+public class SaleRequest {
     @NotNull
-    private Integer article;
-    @NotNull
-    private String name;
-    @NotNull
-    private BigDecimal lastPurchase;
-    private BigDecimal lastSale;
+    private Long number;
     @NotNull
     private Warehouse warehouse;
+    @NotNull
+    private List<Product> productList;
 }

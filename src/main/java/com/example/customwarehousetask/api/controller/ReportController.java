@@ -3,8 +3,9 @@ package com.example.customwarehousetask.api.controller;
 import com.example.customwarehousetask.api.converter.ReportToAllProductResponseConverter;
 import com.example.customwarehousetask.api.converter.ReportToRemnantsResponseConverter;
 import com.example.customwarehousetask.api.json.ReportAllProductResponse;
+import com.example.customwarehousetask.api.json.ReportRemnantsRequest;
 import com.example.customwarehousetask.api.json.ReportRemnantsResponse;
-import com.example.customwarehousetask.api.json.ReportRequest;
+import com.example.customwarehousetask.api.json.ReportAllProductRequest;
 import com.example.customwarehousetask.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +26,14 @@ public class ReportController {
     private final ReportToRemnantsResponseConverter toRemnantsResponseConverter;
 
     @GetMapping("/all/product/list")
-    public @ResponseBody ResponseEntity<List<ReportAllProductResponse>> allProductList(@Validated @RequestBody ReportRequest request) {
+    public @ResponseBody ResponseEntity<List<ReportAllProductResponse>> allProductList(@Validated @RequestBody ReportAllProductRequest request) {
         return ok(service.getAllProductList(request.getNameProduct()).stream()
                 .map(toAllProductResponseConverter::convert)
                 .collect(Collectors.toList()));
     }
 
     @GetMapping("/remnants")
-    public @ResponseBody ResponseEntity<List<ReportRemnantsResponse>> remnants(@Validated @RequestBody ReportRequest request) {
+    public @ResponseBody ResponseEntity<List<ReportRemnantsResponse>> remnants(@Validated @RequestBody ReportRemnantsRequest request) {
         return ok(service.getRemnants(request.getNameWarehouse()).stream()
                 .map(toRemnantsResponseConverter::convert)
                 .collect(Collectors.toList()));

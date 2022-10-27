@@ -1,12 +1,13 @@
 package com.example.customwarehousetask.api.controller;
 
-import com.example.customwarehousetask.documents.Moving;
+import com.example.customwarehousetask.api.json.MovingRequest;
+import com.example.customwarehousetask.api.json.MovingResponse;
 import com.example.customwarehousetask.entity.Warehouse;
+import com.example.customwarehousetask.service.DTO.ProductDTO;
+import com.example.customwarehousetask.service.DTO.WarehouseDTO;
 import com.example.customwarehousetask.service.ProductService;
 import com.example.customwarehousetask.service.WarehouseService;
 import com.example.customwarehousetask.service.converter.DTOToWarehouseConverter;
-import com.example.customwarehousetask.service.DTO.ProductDTO;
-import com.example.customwarehousetask.service.DTO.WarehouseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +29,15 @@ public class MovingController {
     private final DTOToWarehouseConverter toWarehouseConverter;
 
     @PostMapping("/moving")
-    public @ResponseBody ResponseEntity<String> moving(@Validated @RequestBody Moving moving) {
-        WarehouseDTO warehouseDTO = warehouseService.getByName(moving.getWarehouse2());
+    public @ResponseBody ResponseEntity<MovingResponse> moving(@Validated @RequestBody MovingRequest request) {
+        WarehouseDTO warehouseDTO = warehouseService.getById(request.getWarehouseTo().getId());
         if (warehouseDTO == null) {
-            return status(HttpStatus.valueOf("Not found warehouse " + moving.getWarehouse2())).build();
+            return status(HttpStatus.valueOf("Not found warehouse " + request.getWarehouseTo())).build();
         }
         Warehouse warehouse = toWarehouseConverter.convert(warehouseDTO);
-        List<ProductDTO> productDTOList = moving.getProductList().stream()
-                .map(p -> productService.edit(p.getArticle(), null, null, null, warehouse))
+        List<ProductDTO> productDTOList = request.getProductList().stream()
+                .map(p -> productService.move(p.getArticle(), warehouse))
                 .collect(Collectors.toList());
-        return ok(productDTOList + " moved to the warehouse " + warehouseDTO.getName());
+        return ok(new MovingResponse(request.getNumber(), request.getWarehouseFrom(), warehouseDTO, productDTOList));
     }
 }

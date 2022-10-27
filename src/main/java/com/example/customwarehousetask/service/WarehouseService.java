@@ -29,6 +29,14 @@ public class WarehouseService {
         return converter.convert(repository.findByName(name));
     }
 
+    public WarehouseDTO getById(Long id) {
+        Warehouse warehouse = repository.findById(id).orElse(null);
+        if (warehouse == null) {
+            return null;
+        }
+        return converter.convert(warehouse);
+    }
+
     public WarehouseDTO create(String name) {
         if (repository.findByName(name) != null) {
             return null;
