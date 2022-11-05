@@ -1,6 +1,7 @@
 package com.example.customwarehousetask.service;
 
 import com.example.customwarehousetask.entity.Product;
+import com.example.customwarehousetask.entity.Warehouse;
 import com.example.customwarehousetask.exception.CustomUserException;
 import com.example.customwarehousetask.repository.ProductRepository;
 import com.example.customwarehousetask.service.DTO.ProductDTO;
@@ -27,7 +28,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public ProductDTO create(Integer article, String name, BigDecimal lastPurchase, WarehouseDTO warehouseDTO) {
+    public ProductDTO create(Integer article, String name, BigDecimal lastPurchase) {
         if (repository.findByArticle(article) != null) {
             throw new CustomUserException("Such a product already exists!");
         }
@@ -35,12 +36,17 @@ public class ProductService {
         product.setArticle(article);
         product.setName(name);
         product.setLastPurchase(lastPurchase);
-        product.setWarehouse(toWarehouseConverter.convert(warehouseDTO));
         repository.save(product);
         return converter.convert(product);
     }
 
-    public ProductDTO edit(Integer article, String name, BigDecimal lastPurchase, BigDecimal lastSale, WarehouseDTO warehouseDTO) {
+    public ProductDTO addWarehouseDTOList(Integer article, List<WarehouseDTO> warehouseDTOList) {
+        Product product = repository.findByArticle(article);
+        product.setWarehouseList(convertToWarehouseList(warehouseDTOList));
+        return converter.convert(product);
+    }
+
+    public ProductDTO edit(Integer article, String name, BigDecimal lastPurchase, BigDecimal lastSale, List<WarehouseDTO> warehouseDTOList) {
         Product product = repository.findByArticle(article);
         if (product == null) {
             throw new CustomUserException("Not found!");
@@ -54,17 +60,19 @@ public class ProductService {
         if (lastSale != null) {
             product.setLastSale(lastSale);
         }
-        if (warehouseDTO != null) {
-            product.setWarehouse(toWarehouseConverter.convert(warehouseDTO));
+        if (warehouseDTOList != null) {
+            product.setWarehouseList(convertToWarehouseList(warehouseDTOList));
         }
         repository.saveAndFlush(product);
         return converter.convert(product);
     }
 
-    public ProductDTO move(Integer article, WarehouseDTO warehouseDTO) {
+    public ProductDTO move(Integer article, List<WarehouseDTO> warehouseDTOList) {
         Product product = repository.findByArticle(article);
-
-        product.setWarehouse(toWarehouseConverter.convert(warehouseDTO));
+        if (product == null) {
+            throw new CustomUserException("Not found!");
+        }
+        product.setWarehouseList(convertToWarehouseList(warehouseDTOList));
         repository.saveAndFlush(product);
         return converter.convert(product);
     }
@@ -81,8 +89,8 @@ public class ProductService {
         return converter.convert(product);
     }
 
-    public List<ProductDTO> getAllByWarehouse(WarehouseDTO warehouseDTO) {
-        return repository.findAllByWarehouse(toWarehouseConverter.convert(warehouseDTO)).stream()
+    public List<ProductDTO> getAllByWarehouse(List<WarehouseDTO> warehouseDTOList) {
+        return repository.findAllByWarehouseListIn(convertToWarehouseList(warehouseDTOList)).stream()
                 .map(converter::convert)
                 .collect(Collectors.toList());
     }
@@ -90,6 +98,12 @@ public class ProductService {
     public List<ProductDTO> getAllByName(String name) {
         return repository.findAllByName(name).stream()
                 .map(converter::convert)
+                .collect(Collectors.toList());
+    }
+
+    private List<Warehouse> convertToWarehouseList(List<WarehouseDTO> warehouseDTOList) {
+        return warehouseDTOList.stream()
+                .map(toWarehouseConverter::convert)
                 .collect(Collectors.toList());
     }
 }

@@ -15,7 +15,7 @@ public class ProductToResponseConverter implements Converter<ProductDTO, Product
                 product.getName(),
                 product.getLastPurchase(),
                 product.getLastSale(),
-                product.getWarehouseDTO()
+                product.getWarehouseDTOList()
         );
     }
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -13,5 +14,5 @@ public class ProductDTO {
     private String name;
     private BigDecimal lastPurchase;
     private BigDecimal lastSale;
-    private WarehouseDTO warehouseDTO;
+    private List<WarehouseDTO> warehouseDTOList;
 }

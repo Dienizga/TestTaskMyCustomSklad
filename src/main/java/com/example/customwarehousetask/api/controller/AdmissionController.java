@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,13 +33,13 @@ public class AdmissionController {
         List<ProductDTO> productDTOList;
         try {
             warehouseDTO = warehouseService.getById(request.getWarehouseDTO().getId());
+            List<WarehouseDTO> warehouseDTOList = Collections.singletonList(warehouseDTO);
             productDTOList = request.getProductList().stream()
                     .map(p -> productService.create(
                             p.getArticle(),
                             p.getName(),
-                            p.getLastPurchase(),
-                            warehouseDTO
-                    ))
+                            p.getLastPurchase()
+                    )).map(p -> productService.addWarehouseDTOList(p.getArticle(), warehouseDTOList))
                     .collect(Collectors.toList());
         } catch (CustomUserException e) {
             return status(HttpStatus.valueOf(e.getMessage())).build();

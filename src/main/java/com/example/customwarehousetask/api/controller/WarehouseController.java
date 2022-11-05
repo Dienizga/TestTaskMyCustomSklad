@@ -43,20 +43,24 @@ public class WarehouseController {
         return ok(converter.convert(warehouse));
     }
 
-    @PatchMapping("/update/warehouse")
+    @PatchMapping("/edit/warehouse")
     public @ResponseBody ResponseEntity<WarehouseResponse> edit(@Validated @RequestBody WarehouseRequest request) {
         WarehouseDTO warehouse;
         try {
-            warehouse = service.edit(request.getName(), request.getNewName());
+            warehouse = service.edit(request.getId(), request.getNewName());
         } catch (CannotUndoException e) {
-            return status(HttpStatus.valueOf(e.getMessage())).build();
+            return status(HttpStatus.NOT_FOUND).build();
         }
         return ok(converter.convert(warehouse));
     }
 
     @DeleteMapping("/delete/warehouse")
     public @ResponseBody ResponseEntity.BodyBuilder delete(@Validated @RequestBody WarehouseRequest request) {
-        service.delete(request.getName());
+        try {
+            service.delete(request.getId());
+        } catch (CannotUndoException e) {
+            return status(HttpStatus.NOT_FOUND);
+        }
         return status(HttpStatus.ACCEPTED);
     }
 }

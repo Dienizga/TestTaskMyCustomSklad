@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +33,9 @@ public class MovingController {
         List<ProductDTO> productDTOList;
         try {
             warehouseDTO = warehouseService.getById(request.getWarehouseTo().getId());
+            List<WarehouseDTO> warehouseDTOList = Collections.singletonList(warehouseDTO);
             productDTOList = request.getProductList().stream()
-                    .map(p -> productService.move(p.getArticle(), warehouseDTO))
+                    .map(p -> productService.move(p.getArticle(), warehouseDTOList))
                     .collect(Collectors.toList());
         } catch (CustomUserException e) {
             return status(HttpStatus.valueOf(e.getMessage())).build();

@@ -27,7 +27,7 @@ public class ReportService {
         if (warehouseName == null) {
             return productService.getAll();
         }
-        WarehouseDTO warehouse = warehouseService.getByName(warehouseName);
-        return productService.getAllByWarehouse(warehouse);
+        List<WarehouseDTO> warehouseDTOList = warehouseService.getAllByName(warehouseName);
+        return productService.getAllByWarehouse(warehouseDTOList);
     }
 }
