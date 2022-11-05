@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,12 +38,11 @@ class WarehouseServiceTest {
 
     @Test
     void getByName() {
-        Warehouse warehouse = new Warehouse();
-        warehouse.setName("name");
-        when(repository.findByName("name")).thenReturn(warehouse);
+        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse());
+        when(repository.findAllByName("name")).thenReturn(warehouseList);
 
-        WarehouseDTO warehouseDTO = subj.getByName("name");
-        assertEquals(warehouseDTO, toDTOConverter.convert(warehouse));
+        List<WarehouseDTO> warehouseDTOList = subj.getAllByName("name");
+        assertEquals(warehouseDTOList, warehouseList.stream().map(toDTOConverter::convert).collect(Collectors.toList()));
     }
 
     @Test
@@ -56,19 +57,19 @@ class WarehouseServiceTest {
 
     @Test
     void edit() {
-        Warehouse warehouse = new Warehouse();
-        warehouse.setName("name1");
-        subj.edit("name1", "Name2");
+        Warehouse warehouse = new Warehouse(1L, "name1");
+        when(repository.findById(1L)).thenReturn(Optional.of(warehouse));
+        subj.edit(1L, "Name2");
 
-        verify(repository, times(1)).findByName("name1");
+        verify(repository, times(1)).findById(1L);
     }
 
     @Test
     void delete() {
-        Warehouse warehouse = new Warehouse();
-        warehouse.setName("name1");
-        subj.delete("name1");
+        Warehouse warehouse = new Warehouse(1L, "name1");
+        when(repository.findById(1L)).thenReturn(Optional.of(warehouse));
+        subj.delete(1L);
 
-        verify(repository, times(1)).findByName("name1");
+        verify(repository, times(1)).findById(1L);
     }
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -32,7 +33,11 @@ public class Product {
     @Column
     private BigDecimal lastSale;
 
-    @ManyToOne
-    @JoinColumn(name = "warehouse_id", unique = true)
-    private Warehouse warehouse;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_to_warehouse",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "warehouse_id", referencedColumnName = "id")
+    )
+    private List<Warehouse> warehouseList;
 }

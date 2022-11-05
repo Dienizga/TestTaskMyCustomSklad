@@ -23,11 +23,12 @@ public class WarehouseService {
                 .collect(Collectors.toList());
     }
 
-    public WarehouseDTO getByName(String name) {
-        if (repository.findByName(name) == null) {
-            return converter.convert(add(name));
+    public List<WarehouseDTO> getAllByName(String name) {
+        List<Warehouse> warehouseList = repository.findAllByName(name);
+        if (warehouseList.isEmpty()) {
+            warehouseList.add(add(name));
         }
-        return converter.convert(repository.findByName(name));
+        return warehouseList.stream().map(converter::convert).collect(Collectors.toList());
     }
 
     public WarehouseDTO getById(Long id) {
@@ -39,14 +40,11 @@ public class WarehouseService {
     }
 
     public WarehouseDTO create(String name) {
-        if (repository.findByName(name) != null) {
-            throw new CustomUserException("There is already such a warehouse");
-        }
         return converter.convert(add(name));
     }
 
-    public WarehouseDTO edit(String lastName, String newName) {
-        Warehouse warehouse = repository.findByName(lastName);
+    public WarehouseDTO edit(Long id, String newName) {
+        Warehouse warehouse = repository.findById(id).orElse(null);
         if (warehouse == null) {
             throw new CustomUserException("Not found!");
         }
@@ -55,8 +53,11 @@ public class WarehouseService {
         return converter.convert(warehouse);
     }
 
-    public void delete(String name) {
-        Warehouse warehouse = repository.findByName(name);
+    public void delete(Long id) {
+        Warehouse warehouse = repository.findById(id).orElse(null);
+        if (warehouse == null) {
+            throw new CustomUserException("Not found!");
+        }
         repository.delete(warehouse);
     }
 

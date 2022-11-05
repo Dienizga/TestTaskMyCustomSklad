@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,8 +35,8 @@ class ProductRepositoryTest {
 
     @Test
     void findAllByWarehouse() {
-        Warehouse warehouse = new Warehouse(1L, "name");
-        List<Product> productList = subj.findAllByWarehouse(warehouse);
+        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse(1L, "name"));
+        List<Product> productList = subj.findAllByWarehouseListIn(warehouseList);
         assertNotNull(productList);
         assertEquals(1, productList.size());
     }

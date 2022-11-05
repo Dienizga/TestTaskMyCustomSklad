@@ -19,7 +19,7 @@
                 <constraints unique="true" nullable="false" primaryKey="true" deleteCascade="true"/>
             </column>
             <column name="article" type="integer">
-                <constraints nullable="false"/>
+                <constraints unique="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
@@ -30,8 +30,13 @@
             <column name="last_sale" type="numeric">
                 <constraints nullable="true"/>
             </column>
-            <column name="warehouse_id"  type="int">
-                <constraints nullable="false" foreignKeyName="product_warehouse_id" references="warehouse(id)"/>
+        </createTable>
+        <createTable tableName="product_to_warehouse">
+            <column name="product_id" type="int">
+                <constraints foreignKeyName="wtp_product_id" references="product(id)" nullable="false" deleteCascade="true"/>
+            </column>
+            <column name="warehouse_id" type="int">
+                <constraints foreignKeyName="wtp_warehouse_id" references="warehouse(id)" nullable="false" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>

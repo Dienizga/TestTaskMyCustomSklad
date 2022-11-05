@@ -41,22 +41,25 @@ class ProductServiceTest {
 
     @Test
     void create() {
-        Product product = new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000),new Warehouse());
+        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse());
+        Product product = new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseList);
         when(repository.save(any())).thenReturn(product);
-        Warehouse warehouse = new Warehouse(1L, "name");
-        when(toWarehouseConverter.convert(any())).thenReturn(warehouse);
-        ProductDTO productDTO = subj.create(11, "name", BigDecimal.valueOf(10000), new WarehouseDTO(1L, "name"));
+//        Warehouse warehouse = new Warehouse(1L, "name");
+//        when(toWarehouseConverter.convert(any())).thenReturn(warehouse);
+        ProductDTO productDTO = subj.create(11, "name", BigDecimal.valueOf(10000));
 
         assertEquals(productDTO, toDTOConverter.convert(product));
     }
 
     @Test
     void edit() {
-        Product product = new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000),new Warehouse());
+        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse());
+        Product product = new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseList);
         when(repository.findByArticle(any())).thenReturn(product);
         Warehouse warehouse = new Warehouse(1L, "name");
+        List<WarehouseDTO> warehouseDTOList = Collections.singletonList(new WarehouseDTO(1L, "name"));
         when(toWarehouseConverter.convert(any())).thenReturn(warehouse);
-        ProductDTO productDTO = subj.edit(11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), new WarehouseDTO(1L, "name"));
+        ProductDTO productDTO = subj.edit(11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseDTOList);
 
         assertEquals(productDTO, toDTOConverter.convert(product));
         verify(repository, times(1)).saveAndFlush(product);
@@ -70,11 +73,13 @@ class ProductServiceTest {
 
     @Test
     void move() {
-        Product product = new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000),new Warehouse());
+        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse());
+        Product product = new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseList);
         when(repository.findByArticle(any())).thenReturn(product);
         Warehouse warehouse = new Warehouse(1L, "name");
+        List<WarehouseDTO> warehouseDTOList = Collections.singletonList(new WarehouseDTO(1L, "name"));
         when(toWarehouseConverter.convert(any())).thenReturn(warehouse);
-        ProductDTO productDTO = subj.move(11, new WarehouseDTO(1L, "name"));
+        ProductDTO productDTO = subj.move(11, warehouseDTOList);
 
         assertEquals(productDTO, toDTOConverter.convert(product));
         verify(repository, times(1)).saveAndFlush(product);
@@ -82,7 +87,8 @@ class ProductServiceTest {
 
     @Test
     void writeOff() {
-        Product product = new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000),new Warehouse());
+        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse());
+        Product product = new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseList);
         when(repository.findByArticle(any())).thenReturn(product);
         ProductDTO productDTO = subj.writeOff(11, BigDecimal.valueOf(1000));
 
@@ -92,20 +98,22 @@ class ProductServiceTest {
 
     @Test
     void getAllByWarehouse() {
-        Warehouse warehouse = new Warehouse(1L, "name");
-        List<Product> productList = Collections.singletonList(new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000),new Warehouse()));
-        when(repository.findAllByWarehouse(warehouse)).thenReturn(productList);
-        when(toWarehouseConverter.convert(any())).thenReturn(warehouse);
+        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse(1L, "name"));
+        List<Product> productList = Collections.singletonList(new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseList));
+        when(repository.findAllByWarehouseListIn(warehouseList)).thenReturn(productList);
+        when(toWarehouseConverter.convert(any())).thenReturn(warehouseList.get(0));
 
-        List<ProductDTO> productDTOS = subj.getAllByWarehouse(new WarehouseDTO(1L, "name"));
+        List<WarehouseDTO> warehouseDTOList = Collections.singletonList(new WarehouseDTO(1L, "name"));
+        List<ProductDTO> productDTOS = subj.getAllByWarehouse(warehouseDTOList);
         assertNotNull(productDTOS);
 
-        verify(repository, times(1)).findAllByWarehouse(warehouse);
+        verify(repository, times(1)).findAllByWarehouseListIn(warehouseList);
     }
 
     @Test
     void getAllByName() {
-        List<Product> productList = Collections.singletonList(new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000),new Warehouse()));
+        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse());
+        List<Product> productList = Collections.singletonList(new Product(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseList));
         when(repository.findAllByName("name")).thenReturn(productList);
 
         List<ProductDTO> productDTOS = subj.getAllByName("name");

@@ -20,6 +20,11 @@
             <column name="name">name</column>
             <column name="last_purchase">1000</column>
             <column name="last_sale">100</column>
+        </insert>
+    </changeSet>
+    <changeSet id="testProduct_to_Warehouse" author="Denis">
+        <insert tableName="product_to_warehouse">
+            <column name="product_id">1</column>
             <column name="warehouse_id">1</column>
         </insert>
     </changeSet>

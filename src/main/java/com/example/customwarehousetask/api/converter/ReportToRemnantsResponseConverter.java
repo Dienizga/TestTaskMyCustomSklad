@@ -12,7 +12,7 @@ public class ReportToRemnantsResponseConverter implements Converter<ProductDTO, 
         return new ReportRemnantsResponse(
                 product.getArticle(),
                 product.getName(),
-                product.getWarehouseDTO()
+                product.getWarehouseDTOList()
         );
     }
 }

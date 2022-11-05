@@ -38,8 +38,7 @@ public class ProductController {
             productDTO = service.create(
                     request.getArticle(),
                     request.getName(),
-                    request.getLastPurchase(),
-                    request.getWarehouseDTO()
+                    request.getLastPurchase()
             );
         } catch (CannotUndoException e) {
             return status(HttpStatus.valueOf(e.getMessage())).build();
@@ -56,7 +55,7 @@ public class ProductController {
                     request.getName(),
                     request.getLastPurchase(),
                     request.getLastSale(),
-                    request.getWarehouseDTO()
+                    request.getWarehouseDTOList()
             );
         } catch (CannotUndoException e) {
             return status(HttpStatus.valueOf(e.getMessage())).build();
