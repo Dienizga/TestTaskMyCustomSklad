@@ -27,7 +27,7 @@ class WarehouseServiceTest {
 
     @Test
     void getAll() {
-        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse(1L,"name"));
+        List<Warehouse> warehouseList = getWarehouseList();
         when(repository.findAll()).thenReturn(warehouseList);
 
         List<WarehouseDTO> warehouseDTOList = subj.getAll();
@@ -38,7 +38,7 @@ class WarehouseServiceTest {
 
     @Test
     void getByName() {
-        List<Warehouse> warehouseList = Collections.singletonList(new Warehouse());
+        List<Warehouse> warehouseList = getWarehouseList();
         when(repository.findAllByName("name")).thenReturn(warehouseList);
 
         List<WarehouseDTO> warehouseDTOList = subj.getAllByName("name");
@@ -47,7 +47,7 @@ class WarehouseServiceTest {
 
     @Test
     void create() {
-        Warehouse warehouse = new Warehouse(1L, "name");
+        Warehouse warehouse = getWarehouse();
         when(repository.save(any())).thenReturn(warehouse);
 
         WarehouseDTO warehouseDTO = subj.create("name");
@@ -57,7 +57,7 @@ class WarehouseServiceTest {
 
     @Test
     void edit() {
-        Warehouse warehouse = new Warehouse(1L, "name1");
+        Warehouse warehouse = getWarehouse();
         when(repository.findById(1L)).thenReturn(Optional.of(warehouse));
         subj.edit(1L, "Name2");
 
@@ -66,10 +66,18 @@ class WarehouseServiceTest {
 
     @Test
     void delete() {
-        Warehouse warehouse = new Warehouse(1L, "name1");
+        Warehouse warehouse = getWarehouse();
         when(repository.findById(1L)).thenReturn(Optional.of(warehouse));
         subj.delete(1L);
 
         verify(repository, times(1)).findById(1L);
+    }
+
+    private List<Warehouse> getWarehouseList() {
+        return Collections.singletonList(new Warehouse(1L,"name"));
+    }
+
+    private Warehouse getWarehouse() {
+        return new Warehouse(1L, "name");
     }
 }

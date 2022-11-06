@@ -32,10 +32,7 @@ public class WarehouseService {
     }
 
     public WarehouseDTO getById(Long id) {
-        Warehouse warehouse = repository.findById(id).orElse(null);
-        if (warehouse == null) {
-            throw new CustomUserException("Not found!");
-        }
+        Warehouse warehouse = repository.findById(id).orElseThrow(() -> new CustomUserException("Not found!"));
         return converter.convert(warehouse);
     }
 
@@ -44,20 +41,14 @@ public class WarehouseService {
     }
 
     public WarehouseDTO edit(Long id, String newName) {
-        Warehouse warehouse = repository.findById(id).orElse(null);
-        if (warehouse == null) {
-            throw new CustomUserException("Not found!");
-        }
+        Warehouse warehouse = repository.findById(id).orElseThrow(() -> new CustomUserException("Not found!"));
         warehouse.setName(newName);
         repository.saveAndFlush(warehouse);
         return converter.convert(warehouse);
     }
 
     public void delete(Long id) {
-        Warehouse warehouse = repository.findById(id).orElse(null);
-        if (warehouse == null) {
-            throw new CustomUserException("Not found!");
-        }
+        Warehouse warehouse = repository.findById(id).orElseThrow(() -> new CustomUserException("Not found!"));
         repository.delete(warehouse);
     }
 
