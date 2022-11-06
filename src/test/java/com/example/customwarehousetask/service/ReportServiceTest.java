@@ -23,8 +23,7 @@ class ReportServiceTest {
 
     @Test
     void getAllProductList() {
-        List<WarehouseDTO> warehouseDTOList = Collections.singletonList(new WarehouseDTO(1L, "name"));
-        List<ProductDTO> productDTOList = Collections.singletonList(new ProductDTO(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseDTOList));
+        List<ProductDTO> productDTOList = getProductDTOList();
         when(productService.getAllByName("name")).thenReturn(productDTOList);
 
         List<ProductDTO> finalList = subj.getAllProductList("name");
@@ -34,14 +33,22 @@ class ReportServiceTest {
 
     @Test
     void getRemnants() {
-        List<WarehouseDTO> warehouseDTOList = Collections.singletonList(new WarehouseDTO(1L, "name"));
+        List<WarehouseDTO> warehouseDTOList = getWarehouseDTOList();
         when(warehouseService.getAllByName("name")).thenReturn(warehouseDTOList);
 
-        List<ProductDTO> productDTOList = Collections.singletonList(new ProductDTO(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), warehouseDTOList));
+        List<ProductDTO> productDTOList = getProductDTOList();
         when(productService.getAllByWarehouse(warehouseDTOList)).thenReturn(productDTOList);
 
         List<ProductDTO> finalList = subj.getRemnants("name");
 
         assertEquals(productDTOList, finalList);
+    }
+
+    private List<WarehouseDTO> getWarehouseDTOList() {
+        return Collections.singletonList(new WarehouseDTO(1L, "name"));
+    }
+
+    private List<ProductDTO> getProductDTOList() {
+        return Collections.singletonList(new ProductDTO(1L, 11, "name", BigDecimal.valueOf(10000), BigDecimal.valueOf(1000), getWarehouseDTOList()));
     }
 }
